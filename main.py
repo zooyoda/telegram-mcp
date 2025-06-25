@@ -8,6 +8,8 @@ import logging
 import mimetypes
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Union, Any
+import mcp
+print("MCP version:", mcp.__version__)
 
 # Third-party libraries
 import nest_asyncio
