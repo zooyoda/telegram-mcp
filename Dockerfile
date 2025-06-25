@@ -27,7 +27,13 @@ USER appuser
 EXPOSE 8004
 
 # Исправленная команда запуска (как в оригинале)
-CMD ["npx", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
+#CMD ["npx", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
+
+# Вариант через npx (рекомендуется для совместимости):
+#CMD ["npx", "-y", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
+
+# Вариант напрямую (если supergateway установлен глобально):
+CMD ["supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8004/sse || exit 1
