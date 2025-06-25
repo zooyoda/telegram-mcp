@@ -6,33 +6,24 @@ RUN npm install -g supergateway
 WORKDIR /app
 
 COPY requirements.txt .
+
+# Устанавливаем Python-зависимости (включая mcp[cli]>=1.9.4 из requirements.txt)
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Переустанавливаем MCP на последнюю версию, чтобы гарантировать актуальность
+RUN pip install --no-cache-dir --upgrade "mcp[cli]>=1.9.4"
 
 COPY . .
 
 RUN ls -l /app
-
-#RUN useradd -m appuser && chown -R appuser:appuser /app
-#USER appuser
-
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir --upgrade "mcp[cli]"
-
-RUN pip install --upgrade "mcp[cli]"
-
 RUN pip show mcp && echo "MCP version: $(pip show mcp | grep Version)"
-
-RUN pip config list
-
 RUN pip freeze
+RUN pip check
 
 EXPOSE 8004
 
-# Для отладки сначала запусти просто Python:
 CMD ["python", "main.py"]
-
-# После успешной отладки верни запуск supergateway:
-#CMD ["supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8004/sse || exit 1
