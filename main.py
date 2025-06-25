@@ -56,10 +56,10 @@ SESSION_STRING = os.getenv("TELEGRAM_SESSION_STRING")
 
 mcp = FastMCP("telegram")
 
-@mcp.on("initialize")
-async def initialize(params: dict):
-    print(f"=== Received initialize request: {params} ===")
-    return {"capabilities": {}}
+#@mcp.on("initialize")
+#async def initialize(params: dict):
+#    print(f"=== Received initialize request: {params} ===")
+#    return {"capabilities": {}}
 
 if SESSION_STRING:
     # Use the string session if available
