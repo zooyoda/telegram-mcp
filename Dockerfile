@@ -1,29 +1,34 @@
+# Используем Debian-based образ для совместимости с Telethon
 FROM python:3.10-slim
 
+# Устанавливаем Node.js и npm
 RUN apt-get update && apt-get install -y nodejs npm
+
+# Устанавливаем supergateway глобально
 RUN npm install -g supergateway
 
+# Рабочая директория
 WORKDIR /app
 
+# Копируем зависимости
 COPY requirements.txt .
 
-# Устанавливаем Python-зависимости (включая mcp[cli]>=1.9.4 из requirements.txt)
-RUN pip install --upgrade pip
+# Устанавливаем Python-зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Переустанавливаем MCP на последнюю версию, чтобы гарантировать актуальность
-RUN pip install --no-cache-dir --upgrade "mcp[cli]>=1.9.4"
-
+# Копируем исходный код
 COPY . .
 
-RUN ls -l /app
-RUN pip show mcp && echo "MCP version: $(pip show mcp | grep Version)"
-RUN pip freeze
-RUN pip check
+# Создаем non-root пользователя
+RUN useradd -m appuser && chown -R appuser:appuser /app
+USER appuser
 
+# Экспортируем порт для SSE
 EXPOSE 8004
 
-CMD ["python", "main.py"]
+# Исправленная команда запуска (как в оригинале)
+CMD ["npx", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8004/sse || exit 1
+
