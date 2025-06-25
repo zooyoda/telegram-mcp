@@ -9,7 +9,13 @@ import mimetypes
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Union, Any
 import mcp
-print("MCP version:", mcp.__version__)
+import importlib.metadata
+try:
+    version = importlib.metadata.version('mcp')
+    print(f"MCP version: {version}")
+except:
+    print("MCP version: unknown")
+
 
 # Third-party libraries
 import nest_asyncio
