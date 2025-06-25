@@ -2446,8 +2446,6 @@ if __name__ == "__main__":
             print("Starting Telegram client...")
             await client.start()
 
-            print("Telegram client initialized!")
-
             print("Telegram client started. Running MCP server...")
             # Use the asynchronous entrypoint instead of mcp.run()
             await mcp.run_stdio_async()
