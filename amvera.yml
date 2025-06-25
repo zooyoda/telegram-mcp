@@ -1,0 +1,10 @@
+meta:
+  environment: docker
+  toolchain: docker
+  build:
+    dockerfile: Dockerfile
+    skip: false
+
+run:
+  containerPort: 8004
+  servicePort: 8004
