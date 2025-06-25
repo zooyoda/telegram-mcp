@@ -15,9 +15,16 @@ RUN ls -l /app
 #RUN useradd -m appuser && chown -R appuser:appuser /app
 #USER appuser
 
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir --upgrade "mcp[cli]"
+
 RUN pip install --upgrade "mcp[cli]"
 
 RUN pip show mcp && echo "MCP version: $(pip show mcp | grep Version)"
+
+RUN pip config list
+
+RUN pip freeze
 
 EXPOSE 8004
 
