@@ -2457,18 +2457,22 @@ if __name__ == "__main__":
         try:
             # Start the Telethon client non-interactively
             print("Starting Telegram client...")
-            await client.start()
+            print("📡 Connecting Telethon client...")
+            #await client.start()
+            print("✅ Telethon client started.")
 
             print("Telegram client started. Running MCP server...")
-            # Use the asynchronous entrypoint instead of mcp.run()
-            await mcp.run_stdio_async()
-        except Exception as e:
-            print(f"Error starting client: {e}", file=sys.stderr)
-            if isinstance(e, sqlite3.OperationalError) and "database is locked" in str(e):
-                print(
-                    "Database lock detected. Please ensure no other instances are running.",
-                    file=sys.stderr,
-                )
-            sys.exit(1)
+                except Exception as e:
+                    print(f"❌ Error starting client: {e}", file=sys.stderr)
+                    import traceback
+                    traceback.print_exc()
+
+                    if isinstance(e, sqlite3.OperationalError) and "database is locked" in str(e):
+                        print(
+                            "⚠️ Database lock detected. Please ensure no other instances are running.",
+                            file=sys.stderr,
+                         )
+
+              sys.exit(1)
 
     asyncio.run(main())
