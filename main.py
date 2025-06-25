@@ -57,6 +57,16 @@ SESSION_STRING = os.getenv("TELEGRAM_SESSION_STRING")
 
 mcp = FastMCP("telegram")
 
+@mcp.method("initialize")
+async def initialize(**kwargs):
+    return {"status": "ok", "message": "Telegram MCP initialized"}
+
+# Можно временно для теста:
+@mcp.method("chat")
+async def chat_handler(tool_input: dict, **kwargs):
+    user_input = tool_input.get("input", "...")
+    return {"output": f"🤖 Echo: {user_input}"}
+
 if SESSION_STRING:
     # Use the string session if available
     client = TelegramClient(StringSession(SESSION_STRING), TELEGRAM_API_ID, TELEGRAM_API_HASH)
