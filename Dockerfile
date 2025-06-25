@@ -15,6 +15,8 @@ RUN ls -l /app
 #RUN useradd -m appuser && chown -R appuser:appuser /app
 #USER appuser
 
+RUN pip show mcp && echo "MCP version: $(pip show mcp | grep Version)"
+
 EXPOSE 8004
 
 # Для отладки сначала запусти просто Python:
