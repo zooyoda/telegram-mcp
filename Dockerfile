@@ -16,10 +16,10 @@ USER appuser
 EXPOSE 8004
 
 # Для отладки сначала запусти просто Python:
-CMD ["python", "main.py"]
+#CMD ["python", "main.py"]
 
 # После успешной отладки верни запуск supergateway:
-# CMD ["supergateway", "--stdio", "python", "main.py", "--port", "8004"]
+CMD ["supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8004/sse || exit 1
