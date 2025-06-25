@@ -54,6 +54,11 @@ SESSION_STRING = os.getenv("TELEGRAM_SESSION_STRING")
 
 mcp = FastMCP("telegram")
 
+@mcp.on("initialize")
+async def initialize(params: dict):
+    print(f"=== Received initialize request: {params} ===")
+    return {"capabilities": {}}
+
 if SESSION_STRING:
     # Use the string session if available
     client = TelegramClient(StringSession(SESSION_STRING), TELEGRAM_API_ID, TELEGRAM_API_HASH)
@@ -2459,6 +2464,8 @@ if __name__ == "__main__":
             print("Starting Telegram client...")
             await client.start()
             print("Telegram client initialized!")
+
+            print("=== MCP Telegram READY ===")
 
             print("Telegram client started. Running MCP server...")
             await mcp.run_stdio_async()
