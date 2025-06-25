@@ -2458,7 +2458,7 @@ if __name__ == "__main__":
             # Start the Telethon client non-interactively
             print("Starting Telegram client...")
             print("📡 Connecting Telethon client...")
-            await client.start()
+            #await client.start()
             print("✅ Telethon client started.")
 
             print("Telegram client started. Running MCP server...")
