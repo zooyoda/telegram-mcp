@@ -8,14 +8,6 @@ import logging
 import mimetypes
 from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Union, Any
-import mcp
-import importlib.metadata
-try:
-    version = importlib.metadata.version('mcp')
-    print(f"MCP version: {version}")
-except:
-    print("MCP version: unknown")
-
 
 # Third-party libraries
 import nest_asyncio
@@ -61,13 +53,6 @@ TELEGRAM_SESSION_NAME = os.getenv("TELEGRAM_SESSION_NAME")
 SESSION_STRING = os.getenv("TELEGRAM_SESSION_STRING")
 
 mcp = FastMCP("telegram")
-
-async def initialize(params: dict):
-    print(f"=== Received initialize request: {params} ===")
-    return {"capabilities": {}}
-
-mcp.register("initialize", initialize)
-
 
 if SESSION_STRING:
     # Use the string session if available
@@ -2457,32 +2442,17 @@ if __name__ == "__main__":
 
     async def main() -> None:
         try:
-            print("=== MCP Telegram DEBUG ===")
-            print(f"TELEGRAM_API_ID: {os.getenv('TELEGRAM_API_ID')}")
-            print(f"TELEGRAM_API_HASH: {os.getenv('TELEGRAM_API_HASH')[:8] if os.getenv('TELEGRAM_API_HASH') else None}...")
-            print(f"TELEGRAM_SESSION_NAME: {os.getenv('TELEGRAM_SESSION_NAME')}")
-            print(f"TELEGRAM_SESSION_STRING: {os.getenv('TELEGRAM_SESSION_STRING')[:16] if os.getenv('TELEGRAM_SESSION_STRING') else None}...")
-
-            # Проверка, что все переменные окружения заданы
-            if not os.getenv('TELEGRAM_API_ID'):
-                print("ERROR: TELEGRAM_API_ID не задан!", file=sys.stderr)
-            if not os.getenv('TELEGRAM_API_HASH'):
-                print("ERROR: TELEGRAM_API_HASH не задан!", file=sys.stderr)
-            if not (os.getenv('TELEGRAM_SESSION_STRING') or os.getenv('TELEGRAM_SESSION_NAME')):
-                print("ERROR: Ни TELEGRAM_SESSION_STRING, ни TELEGRAM_SESSION_NAME не заданы!", file=sys.stderr)
-
+            # Start the Telethon client non-interactively
             print("Starting Telegram client...")
             await client.start()
+
             print("Telegram client initialized!")
 
-            print("=== MCP Telegram READY ===")
-
             print("Telegram client started. Running MCP server...")
+            # Use the asynchronous entrypoint instead of mcp.run()
             await mcp.run_stdio_async()
         except Exception as e:
-            print(f"=== MCP Telegram ERROR ===\nError starting client: {e}", file=sys.stderr)
-            import traceback
-            traceback.print_exc()
+            print(f"Error starting client: {e}", file=sys.stderr)
             if isinstance(e, sqlite3.OperationalError) and "database is locked" in str(e):
                 print(
                     "Database lock detected. Please ensure no other instances are running.",
