@@ -1,3 +1,5 @@
+print(">>> MCP STARTING...", flush=True)
+
 import asyncio
 import json
 import sys
