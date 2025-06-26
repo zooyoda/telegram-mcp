@@ -17,7 +17,10 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONIOENCODING=UTF-8
 
 # Запуск напрямую (без supergateway)
-CMD ["python", "main.py"]
+#CMD ["python", "main.py"]
+
+# Критично: запуск через npx, чтобы supergateway был PID 1
+CMD ["npx", "-y", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
 # Если потребуется, потом вернёшь запуск через supergateway
 # CMD ["npx", "-y", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
