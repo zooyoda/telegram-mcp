@@ -1,5 +1,5 @@
-docker build -t mcp-test .
-docker run -p 8004:8004 mcp-test
+try:
+    print("🔁 main.py started")
 import os
 import sys
 import json
