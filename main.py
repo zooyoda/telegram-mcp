@@ -1,3 +1,5 @@
+docker build -t mcp-test .
+docker run -p 8004:8004 mcp-test
 import os
 import sys
 import json
@@ -2459,3 +2461,5 @@ if __name__ == "__main__":
             sys.exit(1)
 
     asyncio.run(main())
+    except Exception as e:
+    print("🔥 Ошибка в main.py:", e, flush=True)
