@@ -1,40 +1,39 @@
-# Используем Debian-based образ для совместимости с Telethon
 FROM python:3.10-slim
 
-# Устанавливаем Node.js и npm
-RUN apt-get update && apt-get install -y nodejs npm
+# Установка системных зависимостей
+RUN apt-get update && apt-get install -y \
+    git \
+    nodejs \
+    npm \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем supergateway глобально
+# Установка supergateway
 RUN npm install -g supergateway
 
 # Рабочая директория
 WORKDIR /app
 
-# Копируем зависимости
+# Копирование и установка Python-зависимостей
 COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --upgrade "mcp[cli]>=1.9.4"
 
-# Устанавливаем Python-зависимости
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Копируем исходный код
+# Копирование исходного кода
 COPY . .
 
-# Создаем non-root пользователя
-RUN useradd -m appuser && chown -R appuser:appuser /app
-USER appuser
+# Диагностика
+RUN echo "Содержимое рабочей директории:" && ls -la && \
+    echo "Версия MCP:" && pip show mcp | grep Version
 
-# Экспортируем порт для SSE
-EXPOSE 8004
+# Настройка переменных окружения
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONIOENCODING=UTF-8
 
-# Исправленная команда запуска (как в оригинале)
-#CMD ["npx", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
+# Запуск через npx для гарантированной работы stdio
+CMD ["npx", "-y", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
 
-# Вариант через npx (рекомендуется для совместимости):
-#CMD ["npx", "-y", "supergateway", "--stdio", "python", "main.py", "--port", "8004"]
-
-# Вариант напрямую (если supergateway установлен глобально):
-CMD ["supergateway", "--stdio", "python", "main.py", "--port", "8004"]
-
+# HEALTHCHECK
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8004/sse || exit 1
-
