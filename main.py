@@ -1,4 +1,3 @@
-print("🔁 main.py started")
 import os
 import sys
 import json
